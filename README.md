@@ -29,6 +29,7 @@ Low level communication to the Risco Panel is provided by [Risco Lan library](ht
 - RISCO multipartitions.
 - Bypass zones in Home Assistant (additional switch created for each zone)
 - Multiple systems now supported with configurable alarm topic.
+- Outputs support.  Non-user-usable outputs represented as binary sensors.  User-usable outputs represented as switches.  Note that pulsed swtiches will immediately revert to off.
 
 ## Installation
 
@@ -74,6 +75,31 @@ to YAML format, which allows for comments.
       "device_class": "garage_door", // override device class for binary sensor. default to "motion". see HA documentation for available values
       "name": "Garage Door", // Override default name for this zone. Default to zone label
       "name_prefix": "" // Force zone name prefix to empty for this zone
+    },
+  }
+  "user_outputs": {
+    "default": {
+      "name_prefix": ""
+    },
+    "Up/over Trigger": { 
+      "device_class": "garage", 
+      "name": "Garage door trigger RISCO", 
+      "name_prefix": "" 
+    }
+  },
+  "private_outputs": {
+    "default": {
+      "name_prefix": ""
+    },
+    "Bell": { 
+      "device_class": "sound", 
+      "name": "Alarm Bell", 
+      "name_prefix": "" 
+    },
+    "Strobe": { 
+      "device_class": "light", 
+      "name": "Alarm Strobe", 
+      "name_prefix": "" 
     }
   }
 }
