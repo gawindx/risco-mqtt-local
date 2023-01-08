@@ -80,6 +80,28 @@ const CONFIG_DEFAULTS: RiscoMQTTConfig = {
       name_prefix: '',
     },
   },
+  user_outputs: {
+    default: {
+      name_prefix: ''
+    }
+  },
+  private_outputs: {
+    default: {
+      name_prefix: ''
+    },
+    Bell: {
+      device_class: 'sound',
+      name: 'Alarm Bell',
+      name_prefix: ''
+    },
+    Strobe: {
+      device_class: 'light',
+      name: 'Alarm Strobe',
+      name_prefix: ''
+    }
+
+  },
+
   mqtt: {
     url: null,
     username: null,
@@ -524,17 +546,6 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
       const useroutputName = useroutputConf.name || output.Label;
       payload.name = useroutputConf.name_prefix + useroutputName;
 
-      /*let useroutputIdSegment: string;
-      if (config.ha_discovery_include_nodeId) {
-        useroutputIdSegment = `${output.Label.replace(/ /g, '-')}/${output.Id}`;
-      } else {
-        useroutputIdSegment = `${output.Id}`;
-      }
-
-      mqttClient.publish(`${config.ha_discovery_prefix_topic}/switch/${config.panel_node_id}/${useroutputIdSegment}-output/config`, JSON.stringify(payload), {
-        qos: 1, retain: true,
-      });*/
-
       mqttClient.publish(`${config.ha_discovery_prefix_topic}/switch/${config.panel_node_id}/${output.Id}-output/config`, JSON.stringify(payload), {
         qos: 1, retain: true,
       });
@@ -563,17 +574,6 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
 
       const outputName = privateoutputConf.name || privateoutput.Label;
       payload.name = privateoutputConf.name_prefix + outputName;
-
-      let privateoutputIdSegment: string;
-      /*if (config.ha_discovery_include_nodeId) {
-        privateoutputIdSegment = `${privateoutput.Label.replace(/ /g, '-')}/${privateoutput.Id}`;
-      } else {
-        privateoutputIdSegment = `${privateoutput.Id}`;
-      }
-
-      mqttClient.publish(`${config.ha_discovery_prefix_topic}/binary_sensor/${config.panel_node_id}/${privateoutputIdSegment}-output/config`, JSON.stringify(payload), {
-        qos: 1, retain: true,
-      });*/
 
       mqttClient.publish(`${config.ha_discovery_prefix_topic}/binary_sensor/${config.panel_node_id}/${privateoutput.Id}-output/config`, JSON.stringify(payload), {
         qos: 1, retain: true,
