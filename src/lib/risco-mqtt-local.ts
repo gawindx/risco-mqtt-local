@@ -524,7 +524,7 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
       const useroutputName = useroutputConf.name || output.Label;
       payload.name = useroutputConf.name_prefix + useroutputName;
 
-      let useroutputIdSegment: string;
+      /*let useroutputIdSegment: string;
       if (config.ha_discovery_include_nodeId) {
         useroutputIdSegment = `${output.Label.replace(/ /g, '-')}/${output.Id}`;
       } else {
@@ -532,6 +532,10 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
       }
 
       mqttClient.publish(`${config.ha_discovery_prefix_topic}/switch/${config.panel_node_id}/${useroutputIdSegment}-output/config`, JSON.stringify(payload), {
+        qos: 1, retain: true,
+      });*/
+
+      mqttClient.publish(`${config.ha_discovery_prefix_topic}/switch/${config.panel_node_id}/${output.Id}-output/config`, JSON.stringify(payload), {
         qos: 1, retain: true,
       });
       logger.info(`[Panel => MQTT][Discovery] Published switch to HA on output ${output.Id}`);
@@ -545,7 +549,7 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
 
       const payload = {
         name: privateoutput.Label,
-        unique_id: `${config.risco_node_id}-privateoutput-${privateoutput.Id}`,
+        unique_id: `${config.panel_node_id}-privateoutput-${privateoutput.Id}`,
         availability: {
           topic: getStatusTopic(),
         },
@@ -561,7 +565,7 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
       payload.name = privateoutputConf.name_prefix + outputName;
 
       let privateoutputIdSegment: string;
-      if (config.ha_discovery_include_nodeId) {
+      /*if (config.ha_discovery_include_nodeId) {
         privateoutputIdSegment = `${privateoutput.Label.replace(/ /g, '-')}/${privateoutput.Id}`;
       } else {
         privateoutputIdSegment = `${privateoutput.Id}`;
@@ -569,7 +573,12 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
 
       mqttClient.publish(`${config.ha_discovery_prefix_topic}/binary_sensor/${config.panel_node_id}/${privateoutputIdSegment}-output/config`, JSON.stringify(payload), {
         qos: 1, retain: true,
+      });*/
+
+      mqttClient.publish(`${config.ha_discovery_prefix_topic}/binary_sensor/${config.panel_node_id}/${privateoutput.Id}-output/config`, JSON.stringify(payload), {
+        qos: 1, retain: true,
       });
+
       logger.info(`[Panel => MQTT][Discovery] Published binary_sensor to HA on output ${privateoutput.Id}`);
       logger.verbose(`[Panel => MQTT][Discovery] Output discovery payload\n${JSON.stringify(payload, null, 2)}`);
     }
