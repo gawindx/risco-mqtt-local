@@ -414,6 +414,7 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
   function activeOutputs(outputs: OutputList): Output[] {
     return outputs.values.filter(o => o.UserUsable !== false);
   }
+
   function activePrivateOutputs(privateoutputs: OutputList): Output[] {
     return privateoutputs.values.filter(o => o.UserUsable === false && o.Label !=='' && (o.Type === 1 || o.Type === 3));
   }
@@ -598,24 +599,6 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
     publishHomeAssistantDiscoveryInfo();
     publishOnline();
 
-    logger.info(`Publishing initial partitions and zones state to Home assistant`);
-    for (const partition of activePartitions(panel.partitions)) {
-      publishPartitionStateChanged(partition);
-    }
-
-    for (const zone of activeZones(panel.zones)) {
-      publishZoneStateChange(zone, true);
-      publishZoneBypassStateChange(zone);
-    }
-
-    logger.info(`Publishing initial output states to Home assistant`);
-    for (const output of activeOutputs(panel.outputs)) {
-      publishOutputStateChange(output, '0');
-    }
-    for (const privateoutput of activePrivateOutputs(panel.outputs)) {
-      publishOutputStateChange(privateoutput, '0');
-    }
-
     if (!listenerInstalled) {
       logger.info(`Subscribing to Home assistant commands topics`);
       for (const partition of activePartitions(panel.partitions)) {
@@ -669,6 +652,23 @@ export function riscoMqttHomeAssistant(userConfig: RiscoMQTTConfig) {
       listenerInstalled = true;
     } else {
       logger.info('Listeners already installed, skipping listeners registration');
+    }
+
+    logger.info(`Publishing initial Partitions, Zones and Outputs state to Home assistant`);
+    for (const partition of activePartitions(panel.partitions)) {
+      publishPartitionStateChanged(partition);
+    }
+
+    for (const zone of activeZones(panel.zones)) {
+      publishZoneStateChange(zone, true);
+      publishZoneBypassStateChange(zone);
+    }
+
+    for (const output of activeOutputs(panel.outputs)) {
+      publishOutputStateChange(output, '0');
+    }
+    for (const privateoutput of activePrivateOutputs(panel.outputs)) {
+      publishOutputStateChange(privateoutput, '0');
     }
 
     logger.info(`Initialization completed`);
